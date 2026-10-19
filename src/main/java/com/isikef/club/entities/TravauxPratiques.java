@@ -17,13 +17,13 @@ public class TravauxPratiques implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="TP_ID")
-    private Long tpId;
+    private Long id;
 
     @Column(name="TP_SUJET")
     private String sujet;
 
     @Column(name="TP_DUREE")
-    private Long tpDuree;
+    private Long duree;
 
     @OneToMany(mappedBy = "travauxPratiques")
     private List<TpCorrection> tpCorrections;
