@@ -16,8 +16,10 @@ public class FormationDetail implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="FD_ID")
     private Long fdId;
+
     @Column(name="FD_TABLE_MATIERE")
     private String fdTableMatiere;
+
     @Column(name="FD_SUPPORT_PDF")
     private String fdSupportPDF;
 
