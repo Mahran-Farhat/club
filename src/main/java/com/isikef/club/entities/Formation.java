@@ -19,11 +19,17 @@ public class Formation implements Serializable {
     private Long id; // Identifiant formation (Clé primaire)
 
     @Column(name="FORMATION_THEME")
-    private String theme; // Thème formation
+    @Enumerated(EnumType.STRING)
+    private ThemeFormation theme; // Thème formation
+
     @OneToOne
     @JoinColumn(name = "FORMATION_DETAIL_ID",
             referencedColumnName = "FD_ID")
     private FormationDetail formationDetail;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CLUB_ID")
+    private Club club; // Association avec Club
 
     // association sans données supplémentaires
    /* @ManyToMany
