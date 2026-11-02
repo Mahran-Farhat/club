@@ -4,9 +4,14 @@ import com.isikef.club.entities.Club;
 import com.isikef.club.entities.Formation;
 import com.isikef.club.entities.ThemeFormation;
 import com.isikef.club.forms.FormFormation;
+import com.isikef.club.forms.PageParams;
 import com.isikef.club.repository.ClubRepository;
 import com.isikef.club.repository.FormationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +67,24 @@ public class FormationServiceImpl implements FormationService{
     @Override
     public List<Formation> getAllFormations() {
         return formationRepository.findAll();
+    }
+
+    @Override
+    public List<Formation> findByTheme(ThemeFormation theme) {
+        return formationRepository.findByTheme(theme);
+    }
+
+    @Override
+    public List<Formation> searchByTheme(String theme) {
+        return formationRepository.findByThemeContains(theme);
+    }
+
+    @Override
+    public Page<Formation> getFormationsWithPagination(PageParams pageParams) {
+        Pageable pageable = PageRequest.of(
+                pageParams.getPage(),
+                pageParams.getSize(),
+                Sort.by(Sort.Direction.DESC,"theme"));
+        return formationRepository.findAll(pageable);
     }
 }

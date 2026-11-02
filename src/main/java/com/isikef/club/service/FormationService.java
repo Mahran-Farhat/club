@@ -3,7 +3,10 @@ package com.isikef.club.service;
 
 
 import com.isikef.club.entities.Formation;
+import com.isikef.club.entities.ThemeFormation;
 import com.isikef.club.forms.FormFormation;
+import com.isikef.club.forms.PageParams;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,4 +16,7 @@ public interface FormationService {
     public void deleteFormation(Long id);
     public Formation getFormationById(Long id);
     public List<Formation> getAllFormations();
+    public List<Formation> findByTheme(ThemeFormation theme);
+    public List<Formation> searchByTheme(String theme);
+    public Page<Formation> getFormationsWithPagination(PageParams pageParams);
 }
