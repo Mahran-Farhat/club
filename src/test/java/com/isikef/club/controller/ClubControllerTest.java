@@ -1,6 +1,7 @@
 package com.isikef.club.controller;
 
 import com.isikef.club.entities.Club;
+import com.isikef.club.forms.ClubForm;
 import com.isikef.club.repository.ClubRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +30,9 @@ class ClubControllerTest {
     @Autowired
     private ClubRepository clubRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -36,12 +41,18 @@ class ClubControllerTest {
 
     @Test
     void createClub_shouldReturnSuccess_whenPayloadIsValid() throws Exception {
+        ClubForm input = new ClubForm();
+        input.setName("Alpha Club");
+        input.setDescription("A valid description");
+        String clubJson = objectMapper.writeValueAsString(input);
+
         mockMvc.perform(post("/clubs/create")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Alpha Club\",\"description\":\"A valid description\"}"))
+                        .content(clubJson))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("SUCCESS"))
-                .andExpect(jsonPath("$.content.name").value("Alpha Club"));
+                .andExpect(jsonPath("$.content.name").value(input.getName()))
+                .andExpect(jsonPath("$.content.description").value(input.getDescription()));
     }
 
     @Test
