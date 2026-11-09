@@ -6,6 +6,7 @@ import com.isikef.club.entities.Formation;
 import com.isikef.club.entities.ThemeFormation;
 import com.isikef.club.forms.FormFormation;
 import com.isikef.club.forms.PageParams;
+import com.isikef.club.query.FormationSearchQuery;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,4 +20,5 @@ public interface FormationService {
     public List<Formation> findByTheme(ThemeFormation theme);
     public List<Formation> searchByTheme(String theme);
     public Page<Formation> getFormationsWithPagination(PageParams pageParams);
+    public Page<Formation> getPaginatedAndSortedFormations(FormationSearchQuery query);
 }

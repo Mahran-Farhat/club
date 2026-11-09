@@ -5,13 +5,16 @@ import com.isikef.club.entities.ThemeFormation;
 import com.isikef.club.forms.FormFormation;
 import com.isikef.club.forms.PageParams;
 import com.isikef.club.query.FormationSearchQuery;
+import com.isikef.club.response.CMResponse;
 import com.isikef.club.service.FormationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/formations")
@@ -22,44 +25,50 @@ public class FormationController {
     FormationService formationService;
 
     @PostMapping("/create")
-    public Formation createFormation(@Valid @ModelAttribute FormFormation form) {
-        return formationService.createFormation(form);
+    public CMResponse createFormation(@Valid @ModelAttribute FormFormation form) {
+        Formation f =  formationService.createFormation(form);
+        return CMResponse.success(f);
     }
 
     @GetMapping("/{id}")
-    public Formation getFormationById(@PathVariable Long id) {
-        return formationService.getFormationById(id);
+    public CMResponse getFormationById(@PathVariable Long id) {
+        return CMResponse.success(formationService.getFormationById(id));
     }
 
     @GetMapping
-    public List<Formation> getAllFormations() {
-        return formationService.getAllFormations();
+    public CMResponse getAllFormations() {
+        return CMResponse.success(formationService.getAllFormations());
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFormation(@PathVariable Long id) {
+    public CMResponse deleteFormation(@PathVariable Long id) {
         formationService.deleteFormation(id);
+        Map<String, Boolean> resp = new HashMap<>();
+        resp.put("deleted", Boolean.TRUE);
+        return CMResponse.success(resp);
     }
 
     @GetMapping("/theme/{theme}")
-    public List<Formation> findByTheme(@PathVariable ThemeFormation theme) {
-        return formationService.findByTheme(theme);
+    public CMResponse findByTheme(@PathVariable ThemeFormation theme) {
+        return CMResponse.success(formationService.findByTheme(theme));
     }
 
     @GetMapping("/search/{theme}")
-    public List<Formation> searchByTheme(@PathVariable String theme) {
-        return formationService.searchByTheme(theme);
+    public CMResponse searchByTheme(@PathVariable String theme) {
+        return CMResponse.success(formationService.searchByTheme(theme));
     }
 
     @GetMapping("/paginated")
-    public ResponseEntity<?> getFormationsWithPagination(
+    public CMResponse getFormationsWithPagination(
             @ModelAttribute PageParams pageParams) {
-        return ResponseEntity.ok(formationService.getFormationsWithPagination(pageParams));
+        return CMResponse.of(formationService.getFormationsWithPagination(pageParams));
     }
 
     @GetMapping("/sortedAndPaginated")
-    public ResponseEntity<?> getPaginatedAndSortedFormations(
+    public CMResponse getPaginatedAndSortedFormations(
             @ModelAttribute FormationSearchQuery query) {
-        return ResponseEntity.ok(null);
+        Page<Formation> rpage =
+                formationService.getPaginatedAndSortedFormations(query);
+        return CMResponse.of(rpage);
     }
 }

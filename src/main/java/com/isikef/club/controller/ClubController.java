@@ -3,10 +3,10 @@ package com.isikef.club.controller;
 import com.isikef.club.entities.Club;
 import com.isikef.club.exceptions.ResourceNotFound;
 import com.isikef.club.forms.ClubForm;
+import com.isikef.club.response.CMResponse;
 import com.isikef.club.service.IClubService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,31 +22,31 @@ public class ClubController {
     IClubService clubService;
 
     @PostMapping("/create")
-    public ResponseEntity createClub(@Valid @RequestBody ClubForm clubForm) {
+    public CMResponse createClub(@Valid @RequestBody ClubForm clubForm) {
         Club club = clubService.createClub(clubForm.getName(), clubForm.getDescription());
         if (club != null)
-            return ResponseEntity.ok(club);
+            return CMResponse.success(club);
         else
-            return ResponseEntity.badRequest().body("Check provided data.");
+            return CMResponse.failed("Check provided data.");
     }
 
     @GetMapping
-    public ResponseEntity getClubs(){
+    public CMResponse getClubs(){
         List<Club> clubList = clubService.getAllClubs();
-        return ResponseEntity.ok().body(clubList);
+        return CMResponse.success(clubList);
     }
 
     @GetMapping("/get")
-    public ResponseEntity getClub(@RequestParam Long id) throws ResourceNotFound {
+    public CMResponse getClub(@RequestParam Long id) throws ResourceNotFound {
         Club club = clubService.getClubById(id);
-        return ResponseEntity.ok().body(club);
+        return CMResponse.success(club);
     }
 
     @DeleteMapping
-    public ResponseEntity deleteClub(@RequestParam Long id) throws ResourceNotFound {
+    public CMResponse deleteClub(@RequestParam Long id) throws ResourceNotFound {
         clubService.deleteClub(id);
         Map<String, Boolean> resp = new HashMap<>();
-        resp.put("deleted",Boolean.TRUE);
-        return ResponseEntity.ok().body(resp);
+        resp.put("deleted", Boolean.TRUE);
+        return CMResponse.success(resp);
     }
 }

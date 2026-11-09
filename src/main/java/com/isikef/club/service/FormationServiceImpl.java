@@ -1,10 +1,12 @@
 package com.isikef.club.service;
 
+import com.isikef.club.builder.FormationQueryBuilder;
 import com.isikef.club.entities.Club;
 import com.isikef.club.entities.Formation;
 import com.isikef.club.entities.ThemeFormation;
 import com.isikef.club.forms.FormFormation;
 import com.isikef.club.forms.PageParams;
+import com.isikef.club.query.FormationSearchQuery;
 import com.isikef.club.repository.ClubRepository;
 import com.isikef.club.repository.FormationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +87,14 @@ public class FormationServiceImpl implements FormationService{
                 pageParams.getPage(),
                 pageParams.getSize(),
                 Sort.by(Sort.Direction.DESC,"theme"));
+        return formationRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Formation> getPaginatedAndSortedFormations(FormationSearchQuery query) {
+       /* FormationQueryBuilder builder = new FormationQueryBuilder();
+        Pageable pageable = builder.of(query);*/
+        Pageable pageable = FormationQueryBuilder.of(query);
         return formationRepository.findAll(pageable);
     }
 }

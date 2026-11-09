@@ -1,5 +1,6 @@
 package com.isikef.club.exceptions;
 
+import com.isikef.club.response.CMResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.ConnectException;
@@ -20,8 +22,9 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFound.class)
-    public ResponseEntity<String> handleResourceNotFound(ResourceNotFound ex) {
-        return ResponseEntity.status(404).body(ex.getMessage());
+    public ResponseEntity<CMResponse> handleResourceNotFound(ResourceNotFound ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(CMResponse.failed(ex.getMessage()));
     }
 
     @ExceptionHandler(ConnectException.class)
